@@ -1,0 +1,3 @@
+
+
+var wordsNumber = 10;
