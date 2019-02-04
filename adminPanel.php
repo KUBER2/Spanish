@@ -66,11 +66,9 @@ $partsOfSpeech =  $partsOfSpeechQuery->fetchAll();
                 <a class="nav-link active" data-toggle="pill" href="#addWord">Dodaj słowo</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-toggle="pill" href="#verbs">Czasowniki</a>
+                <a class="nav-link" data-toggle="pill" href="#addCategory">Dodaj kategorie</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" data-toggle="pill" href="#menu2">Menu 2</a>
-            </li>
+            
           </ul>
         </div>
       </div>
@@ -131,24 +129,28 @@ $partsOfSpeech =  $partsOfSpeechQuery->fetchAll();
             <button type="submit" class="btn btn-success btn-block">Dodaj</button>
                 
             <div  class="w-100 bg-danger p-2" id="allert">
-              <p><?= isset($_SESSION['errMsg']) ? $_SESSION['errMsg'] . $_SESSION['errDetail']: "" ?></p>
-                <?php 	unset($_SESSION['errMsg']);	?>
+              <p>
+                <?php 	
+                  if(isset($_SESSION['errMsg'])){
+                    echo '<script> document.getElementById("allert").style.display = "block"</script>';
+                    echo $_SESSION['errMsg'] . $_SESSION['errDetail'];
+                    unset($_SESSION['errMsg']);
+                  }else{
+                    
+                  }
+                  ?>
+              </p>
             </div>
               
           </form>
         </div>
             
-        <div id="verbs" class="container tab-pane fade"> <!-- Displaying verb tab --><br> 
-                
-        </div>
-          <div id="menu2" class="container tab-pane fade"><br>
-            <h3>Menu 2</h3>
-            <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
-          </div>
+          <div id="addCategory" class="container tab-pane fade"> <!-- add category tab --><br> 
+                  
+          </div>          
         </div>
         <div class="col-sm-3">
-          <h4>Twoja ostania aktywność aktywność</h4>
-        
+          <h4>Ostanio:</h4>        
         </div>
       </div>
 	</div>	
