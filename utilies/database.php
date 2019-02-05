@@ -2,8 +2,6 @@
 
 $config = require_once 'config.php';
 
-
-
 try{
 	$db = new PDO(
 		"mysql:host={$config['host']};dbname={$config['database']};charset=utf8",
@@ -15,6 +13,6 @@ try{
 	
 }catch(PDOException $error){
 	
-	echo $error;
+	//echo $error;
 	exit('database error');
 }

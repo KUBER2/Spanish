@@ -1,13 +1,13 @@
 <?php
 
 session_start();
+require_once 'utilies/database.php';
 
 //protection against sneaking in
 if(!isset($_SESSION['logged_id'])){
 	header('Location: adminLog.php');
 	exit();
 }
-//echo print_r($_POST);
 
 if((!isset($_POST['word']))||(!isset($_POST['translation']))||(!isset($_POST['PoS']))){
 	$_SESSION['errMsg']='Brakuje danych: pola "Słowo po hiszpańsku" i "Tłuamczenia" nie mogą być puste!';
@@ -15,10 +15,18 @@ if((!isset($_POST['word']))||(!isset($_POST['translation']))||(!isset($_POST['Po
 	exit();
 }
 
-
 try{
-	require_once 'utilies/database.php';
-	$word = filter_input(INPUT_POST, 'word');
+	
+	$word = filter_input (INPUT_POST, 'word');
+	$getWordQuery = $db->prepare('SELECT `Word` FROM `dictionary` WHERE `Word` = :word');
+  	$getWordQuery->bindValue(':word', $word, PDO::PARAM_STR);
+  	$getWordQuery->execute();
+  	$WordFromDB = $getWordQuery->fetch();
+  	if(count($WordFromDB)>0){
+    	$_SESSION['errMsg']="Słowo: $word znajduje się juz w bazie danych";
+		header('Location: adminPanel.php');
+		exit();
+  	}
 	$translation = filter_input(INPUT_POST, 'translation');	
 	$PoS = filter_input(INPUT_POST, 'PoS');		
 	$category = filter_input(INPUT_POST, 'category');
@@ -42,7 +50,7 @@ try{
 	
 }catch(PDOException $e){
 	$_SESSION['errMsg']= $e->getMessage();
-	$_SESSION['errDetail']="słowo: $word tłumaczenie: $translation categoryID: $category PoS: $PoS";
+	//$_SESSION['errDetail']="słowo: $word tłumaczenie: $translation categoryID: $category PoS: $PoS";
 	header('Location: adminPanel.php');
 	exit();
 }

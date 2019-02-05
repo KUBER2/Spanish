@@ -13,11 +13,11 @@
 	
 	<link rel="stylesheet" href="css/style.css" type="text/css"/>
 </head>
-<body>
+<body class="bg-dark">
 
 	
 
-	<div class="container bg-dark">
+	<div class="container">
 		<div class="col-sm-6 offset-md-2 ">
 			<form method="post" action="adminPanel.php">
 				<div class="form-group">

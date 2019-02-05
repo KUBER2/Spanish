@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once 'utilies/database.php';
+require_once 'utilies/bdUtilies.php';
 
 if(!isset($_SESSION['logged_id'])){
 
@@ -14,8 +15,7 @@ if(!isset($_SESSION['logged_id'])){
 		$userQuery->bindValue(':login', $login, PDO::PARAM_STR);
 		$userQuery->execute();
 		
-		$user = $userQuery->fetch();
-		//echo $user['id'] . " " . $user['password'].$_POST['pswd'];
+		$user = $userQuery->fetch();		
 		
 		if($user && password_verify($password,$user['password'])){
 			$_SESSION['logged_id']=$user['AdminID'];
@@ -45,7 +45,7 @@ $partsOfSpeech =  $partsOfSpeechQuery->fetchAll();
 <head>
   <title>Panel admina</title>
   <meta charset="utf-8">
-  <meta name="Stona Jakub Rola" content="Język hiszpański nauka" />
+  <meta name="Panel admina" content="Język hiszpański nauka" />
 	<meta name="keywords" content="Jakub Rola, Hiszpański, nauka języka" />
 	
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
@@ -63,10 +63,10 @@ $partsOfSpeech =  $partsOfSpeechQuery->fetchAll();
           <!-- Nav pills -->
           <ul class="nav nav-pills" role="tablist">
             <li class="nav-item">
-                <a class="nav-link active" data-toggle="pill" href="#addWord">Dodaj słowo</a>
+                <a class="nav-link active" data-toggle="pill" href="#addWord" id = "addWordButton">Dodaj słowo</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-toggle="pill" href="#addCategory">Dodaj kategorie</a>
+                <a class="nav-link" data-toggle="pill" href="#addCategory" id = "addCategoryButton">Dodaj kategorie</a>
             </li>
             
           </ul>
@@ -105,8 +105,7 @@ $partsOfSpeech =  $partsOfSpeechQuery->fetchAll();
               <select class="form-control" id="category" name="category">
                 <?php
                   foreach($categorys as $category){
-                  echo '<option>'  . $category['category'] .'</option>';
-                  //print_r($category['category']);
+                  echo '<option>'  . $category['category'] .'</option>';                  
                   }										
                 ?>
               </select>
@@ -133,11 +132,9 @@ $partsOfSpeech =  $partsOfSpeechQuery->fetchAll();
                 <?php 	
                   if(isset($_SESSION['errMsg'])){
                     echo '<script> document.getElementById("allert").style.display = "block"</script>';
-                    echo $_SESSION['errMsg'] . $_SESSION['errDetail'];
+                    echo $_SESSION['errMsg'] ;
                     unset($_SESSION['errMsg']);
-                  }else{
-                    
-                  }
+                  }                                     
                   ?>
               </p>
             </div>
@@ -146,7 +143,30 @@ $partsOfSpeech =  $partsOfSpeechQuery->fetchAll();
         </div>
             
           <div id="addCategory" class="container tab-pane fade"> <!-- add category tab --><br> 
-                  
+            <form action="addCategory.php" method="post">
+              <?php //Display message if last action has been succeeded
+                if(isset($_SESSION['successMsg'])){
+                  echo '<div class="alert alert-success alert-dismissible"><strong>Success!</strong>' . $_SESSION['successMsg'] . '</div>';
+                  unset($_SESSION['successMsg']);
+                }
+              ?>
+              <div class="form-group">
+                <label for="category">Nowa kategoria:</label>
+                <input type="text" class="form-control" id="category" name="category">
+              </div>
+              <button type="submit" class="btn btn-success btn-block">Dodaj</button>
+              <div  class="w-100 bg-danger p-2" id="allert">
+                <p>
+                  <?php 	
+                    if(isset($_SESSION['errMsg'])){
+                      echo '<script> document.getElementById("allert").style.display = "block"</script>';
+                      echo $_SESSION['errMsg'] ;
+                      unset($_SESSION['errMsg']);
+                    }                                     
+                    ?>
+                </p>
+              </div>
+            </form>
           </div>          
         </div>
         <div class="col-sm-3">
@@ -156,5 +176,6 @@ $partsOfSpeech =  $partsOfSpeechQuery->fetchAll();
 	</div>	
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+  <script src="JS/tabFader.js"></script>
 </body>
 </html>
